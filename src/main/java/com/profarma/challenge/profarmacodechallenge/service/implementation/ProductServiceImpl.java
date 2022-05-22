@@ -2,7 +2,6 @@ package com.profarma.challenge.profarmacodechallenge.service.implementation;
 
 import com.profarma.challenge.profarmacodechallenge.dto.ProductDto;
 import com.profarma.challenge.profarmacodechallenge.entity.ProductEntity;
-import com.profarma.challenge.profarmacodechallenge.entity.SellerEntity;
 import com.profarma.challenge.profarmacodechallenge.mapper.Mapper;
 import com.profarma.challenge.profarmacodechallenge.repository.ProductRepository;
 import com.profarma.challenge.profarmacodechallenge.service.IProductService;
@@ -30,30 +29,27 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public ProductEntity findProduct(ProductEntity product) {
+        return productRepository.findByProductName(product.getProductName());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
         return mapper.convertListProduct(productRepository.findAll());
     }
 
-//    @Override
-//    public SellerEntity findById(Long id) {
-//        return productRepository.findById(id).orElse(null);
-//    }
-//
-//    @Override
-//    @Transactional
-//    public void deleteSeller(Long id) {
-//        productRepository.deleteById(id);
-//    }
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public SellerEntity findProduct(SellerEntity sellerEntity) {
-//        return null;
-//    }
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<ProductDto> findAll() {
-//        return mapper.convertListProduct(productRepository.findAll());
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public ProductEntity findById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+
+    }
 }

@@ -10,10 +10,10 @@ public interface IProductService {
 
     void save(ProductEntity product);
 
-//    SellerEntity findById(Long id);
-//
-//    void deleteSeller(Long id);
-//
-//    SellerEntity findSeller(SellerEntity sellerEntity);
+    ProductEntity findProduct(ProductEntity product);
+
+    ProductEntity findById(Long id);
+
+    void deleteProduct(Long id);
 
 }

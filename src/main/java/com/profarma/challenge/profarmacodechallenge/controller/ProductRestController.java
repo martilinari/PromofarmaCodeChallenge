@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/product")
 public class ProductRestController {
 
     @Autowired
@@ -32,25 +32,25 @@ public class ProductRestController {
         }
     }
 
-//    @PostMapping("/add_product")
-//    public ResponseEntity<Void> addProduct(@RequestBody ProductEntity product) {
-//        if (sellerService.findSeller(seller) == null) {
-//            sellerService.save(seller);
-//            return new ResponseEntity<Void>(HttpStatus.CREATED);
-//        }
-//        return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-//    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    public ResponseEntity<Void> deleteSeller(@PathVariable(value = "id") Long id) {
-//        SellerEntity sellerDB = null;
-//        sellerDB = sellerService.findById(id);
-//        if (sellerDB != null) {
-//            sellerService.deleteSeller(id);
-//            return new ResponseEntity<Void>(HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @PostMapping("/add_product")
+    public ResponseEntity<Void> addProduct(@RequestBody ProductEntity product) {
+        if (productService.findProduct(product) == null) {
+            productService.save(product);
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "id") Long id) {
+        ProductEntity product = null;
+        product = productService.findById(id);
+        if (product != null) {
+            productService.deleteProduct(id);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

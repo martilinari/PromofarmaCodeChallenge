@@ -30,6 +30,7 @@ public class SellerServiceImpl implements ISellerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public SellerEntity findById(Long id) {
         return sellerRepository.findById(id).orElse(null);
     }
