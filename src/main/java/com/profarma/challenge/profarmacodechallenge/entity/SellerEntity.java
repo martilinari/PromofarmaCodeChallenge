@@ -1,6 +1,11 @@
 package com.profarma.challenge.profarmacodechallenge.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "seller")
@@ -8,25 +13,30 @@ public class SellerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long sellerId;
+    private Long id;
 
     @Column(name = "name")
     private String name;
 
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "profesor_id", referencedColumnName = "id")
-//    private List<ProductEntity> listCursos = new ArrayList<>();
+    @Column(length = 60, unique = true)
+    private String email;
+
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JsonBackReference
+    @JoinTable(name = "seller_product", joinColumns = @JoinColumn(name = "productId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "sellerId", referencedColumnName = "id"))
+    private Set<ProductEntity> products = new HashSet<ProductEntity>();
 
     public SellerEntity() {
 
     }
 
-    public Long getSellerId() {
-        return sellerId;
+    public Long getId() {
+        return id;
     }
 
-    public void setSellerId(Long sellerId) {
-        this.sellerId = sellerId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -35,5 +45,13 @@ public class SellerEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

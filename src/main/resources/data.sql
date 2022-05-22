@@ -1,1 +1,0 @@
-INSERT INTO product (product_name) VALUES ('aspirin');

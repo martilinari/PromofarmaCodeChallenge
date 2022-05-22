@@ -1,6 +1,10 @@
 package com.profarma.challenge.profarmacodechallenge.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -8,17 +12,22 @@ public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private Long id;
 
     @Column(name = "product_name")
     private String productName;
 
-    public Long getProductId() {
-        return productId;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JsonBackReference
+    @JoinTable(name = "seller_product", joinColumns = @JoinColumn(name = "sellerId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "productId", referencedColumnName = "id"))
+    private Set<SellerEntity> lenguajes = new HashSet<SellerEntity>();
+
+    public Long getId() {
+        return id;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getProductName() {
@@ -27,5 +36,13 @@ public class ProductEntity {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public Set<SellerEntity> getLenguajes() {
+        return lenguajes;
+    }
+
+    public void setLenguajes(Set<SellerEntity> lenguajes) {
+        this.lenguajes = lenguajes;
     }
 }
