@@ -2,15 +2,15 @@ package com.profarma.challenge.profarmacodechallenge.service.implementation;
 
 import com.profarma.challenge.profarmacodechallenge.dto.ProductDto;
 import com.profarma.challenge.profarmacodechallenge.entity.ProductEntity;
-import com.profarma.challenge.profarmacodechallenge.mapper.Mapper;
 import com.profarma.challenge.profarmacodechallenge.repository.ProductRepository;
 import com.profarma.challenge.profarmacodechallenge.service.IProductService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("productService")
 public class ProductServiceImpl implements IProductService {
@@ -19,25 +19,28 @@ public class ProductServiceImpl implements IProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    @Qualifier("Mapper")
-    private Mapper mapper;
+    private ModelMapper modelMapper;
+
 
     @Override
     @Transactional
-    public void save(ProductEntity product) {
-        productRepository.save(product);
+    public void save(ProductDto productDto) {
+        productRepository.save(convertDtoToEntity(productDto));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProductEntity findProduct(ProductEntity product) {
-        return productRepository.findByProductName(product.getProductName());
+    public ProductDto findProductByName(ProductDto productDto) {
+        return convertEntityToDto(productRepository.findByProductName(productDto.getProductName()));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> findAll() {
-        return mapper.convertListProduct(productRepository.findAll());
+    public List<ProductDto> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,5 +54,24 @@ public class ProductServiceImpl implements IProductService {
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
 
+    }
+
+
+    private ProductDto convertEntityToDto(ProductEntity productEntity) {
+        ProductDto productDto = null;
+        if (productEntity != null) {
+            new ProductDto();
+            productDto = modelMapper.map(productEntity, ProductDto.class);
+        }
+        return productDto;
+    }
+
+    private ProductEntity convertDtoToEntity(ProductDto productDto) {
+        ProductEntity productEntity = null;
+        if (productDto != null) {
+            new ProductEntity();
+            productEntity = modelMapper.map(productDto, ProductEntity.class);
+        }
+        return productEntity;
     }
 }

@@ -17,10 +17,14 @@ public class ProductEntity {
     @Column(name = "product_name")
     private String productName;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JsonBackReference
-    @JoinTable(name = "seller_product", joinColumns = @JoinColumn(name = "sellerId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "productId", referencedColumnName = "id"))
-    private Set<SellerEntity> lenguajes = new HashSet<SellerEntity>();
+//    @Column(name = "sellerId")
+//    private Long sellerId;
+
+
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JsonBackReference
+//    @JoinTable(name = "seller_product", joinColumns = @JoinColumn(name = "sellerId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "productId", referencedColumnName = "id"))
+//    private Set<SellerEntity> lenguajes = new HashSet<SellerEntity>();
 
     public Long getId() {
         return id;
@@ -37,12 +41,13 @@ public class ProductEntity {
     public void setProductName(String productName) {
         this.productName = productName;
     }
+//
+//    public Long getSellerId() {
+//        return sellerId;
+//    }
+//
+//    public void setSellerId(Long sellerId) {
+//        this.sellerId = sellerId;
+//    }
 
-    public Set<SellerEntity> getLenguajes() {
-        return lenguajes;
-    }
-
-    public void setLenguajes(Set<SellerEntity> lenguajes) {
-        this.lenguajes = lenguajes;
-    }
 }

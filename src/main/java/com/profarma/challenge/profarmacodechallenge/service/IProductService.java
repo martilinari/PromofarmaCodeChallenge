@@ -6,11 +6,11 @@ import com.profarma.challenge.profarmacodechallenge.entity.ProductEntity;
 import java.util.List;
 
 public interface IProductService {
-    List<ProductDto> findAll();
+    List<ProductDto> getAllProducts();
 
-    void save(ProductEntity product);
+    void save(ProductDto productDto);
 
-    ProductEntity findProduct(ProductEntity product);
+    ProductDto findProductByName(ProductDto productDto);
 
     ProductEntity findById(Long id);
 

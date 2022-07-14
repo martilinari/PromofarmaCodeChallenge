@@ -1,12 +1,15 @@
 package com.profarma.challenge.profarmacodechallenge.controller;
 
+import com.profarma.challenge.profarmacodechallenge.common.ApiResponse;
 import com.profarma.challenge.profarmacodechallenge.dto.ProductDto;
 import com.profarma.challenge.profarmacodechallenge.entity.ProductEntity;
-import com.profarma.challenge.profarmacodechallenge.entity.SellerEntity;
 import com.profarma.challenge.profarmacodechallenge.service.IProductService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,25 +23,21 @@ public class ProductRestController {
     @Qualifier("productService")
     private IProductService productService;
 
-
-    @GetMapping("/products")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getProducts() {
-        List<ProductDto> productList = productService.findAll();
-        if (null != productList && productList.size() != 0) {
-            return new ResponseEntity<>(productList, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    @ApiOperation(value = "Creates new product in DB")
+    @PostMapping(path = "/create_product", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductDto productDto) {
+        if (productService.findProductByName(productDto) == null) {
+            productService.save(productDto);
+            return new ResponseEntity<>(new ApiResponse("Product has been created."), HttpStatus.CREATED);
         }
+        return new ResponseEntity<>(new ApiResponse("Product already exists."), HttpStatus.CONFLICT);
     }
 
-    @PostMapping("/add_product")
-    public ResponseEntity<Void> addProduct(@RequestBody ProductEntity product) {
-        if (productService.findProduct(product) == null) {
-            productService.save(product);
-            return new ResponseEntity<Void>(HttpStatus.CREATED);
-        }
-        return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+    @ApiOperation(value = "Return the list of all products in DB")
+    @GetMapping(path = "/products", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<ProductDto>> getProducts() {
+        List<ProductDto> products = productService.getAllProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
