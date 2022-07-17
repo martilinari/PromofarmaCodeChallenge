@@ -1,43 +1,25 @@
 package com.profarma.challenge.profarmacodechallenge.entity;
 
 
-import lombok.Data;
-
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "seller")
 public class SellerEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     @Column(name = "seller_name")
     private String sellerName;
-//
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "sellerId", referencedColumnName = "id")
-//    private List<ProductEntity> listProducts = new ArrayList<>();
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JsonBackReference
-//    @JoinTable(name = "seller_product", joinColumns = @JoinColumn(name = "productId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "sellerId", referencedColumnName = "id"))
-//    private Set<ProductEntity> products = new HashSet<ProductEntity>();
+    private Set<SellerProductEntity> sellerProduct = new HashSet<>();
 
-//    public SellerEntity() {
-//
-//    }
-//
-//    public List<ProductEntity> getListProducts() {
-//        return listProducts;
-//    }
-//
-//    public void setListProducts(List<ProductEntity> listProducts) {
-//        this.listProducts = listProducts;
-//    }
-//
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SELLER_ID")
     public Long getId() {
         return id;
     }
@@ -52,5 +34,14 @@ public class SellerEntity {
 
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    @OneToMany(mappedBy = "primaryKey.seller", cascade = CascadeType.ALL)
+    public Set<SellerProductEntity> getSellerProduct() {
+        return sellerProduct;
+    }
+
+    public void setSellerProduct(Set<SellerProductEntity> sellerProduct) {
+        this.sellerProduct = sellerProduct;
     }
 }

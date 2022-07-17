@@ -1,67 +1,53 @@
-//package com.profarma.challenge.profarmacodechallenge.entity;
-//
-//import com.fasterxml.jackson.annotation.JsonBackReference;
-//
-//import javax.persistence.*;
-//import java.math.BigDecimal;
-//import java.util.Set;
-//
-//@Entity
-//@Table(name = "seller_prod")
-//public class SellerProductEntity {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//
-//    @Column(name = "stock")
-//    private Long stock;
-//
-//    @Column(name = "price")
-//    private BigDecimal price;
-////
-////    @ManyToMany(cascade = CascadeType.ALL)
-////    private Set<ProductEntity> product;
-//
-//    private SellerEntity seller;
-//
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-//
-//    public Long getStock() {
-//        return stock;
-//    }
-//
-//    public void setStock(Long stock) {
-//        this.stock = stock;
-//    }
-//
-//    public BigDecimal getPrice() {
-//        return price;
-//    }
-//
-//    public void setPrice(BigDecimal price) {
-//        this.price = price;
-//    }
-//
-////    public Set<ProductEntity> getProduct() {
-////        return product;
-////    }
-////
-////    public void setProduct(Set<ProductEntity> product) {
-////        this.product = product;
-////    }
-//
-//    public Set<SellerEntity> getSeller() {
-//        return seller;
-//    }
-//
-//    public void setSeller(Set<SellerEntity> seller) {
-//        this.seller = seller;
-//    }
-//}
+package com.profarma.challenge.profarmacodechallenge.entity;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Optional;
+
+@Entity
+@Table(name = "seller_product")
+@AssociationOverrides({@AssociationOverride(name = "primaryKey.seller", joinColumns = @JoinColumn(name = "SELLER_ID")),
+        @AssociationOverride(name = "primaryKey.product", joinColumns = @JoinColumn(name = "PRODUCT_ID"))})
+public class SellerProductEntity {
+
+    // composite-id key
+    private SellerProductId primaryKey = new SellerProductId();
+
+    @Column(name = "price")
+    private BigDecimal price;
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    @EmbeddedId
+    public SellerProductId getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(SellerProductId primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    @Transient
+    public SellerEntity getSeller() {
+        return getPrimaryKey().getSeller();
+    }
+
+    public void setSeller(SellerEntity seller) {
+        getPrimaryKey().setSeller(seller);
+    }
+
+    @Transient
+    public ProductEntity getProduct() {
+        return getPrimaryKey().getProduct();
+    }
+
+    public void setProduct(ProductEntity product) {
+        getPrimaryKey().setProduct(product);
+    }
+}

@@ -6,22 +6,16 @@ import javax.persistence.*;
 @Table(name = "product")
 public class ProductEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "product_name")
     private String productName;
 
-//    @Column(name = "sellerId")
-//    private Long sellerId;
+    private Set<SellerProductEntity> sellerProduct = new HashSet<>();
 
-
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JsonBackReference
-//    @JoinTable(name = "seller_product", joinColumns = @JoinColumn(name = "sellerId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "productId", referencedColumnName = "id"))
-//    private Set<SellerEntity> lenguajes = new HashSet<SellerEntity>();
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PRODUCT_ID")
     public Long getId() {
         return id;
     }
@@ -37,13 +31,14 @@ public class ProductEntity {
     public void setProductName(String productName) {
         this.productName = productName;
     }
-//
-//    public Long getSellerId() {
-//        return sellerId;
-//    }
-//
-//    public void setSellerId(Long sellerId) {
-//        this.sellerId = sellerId;
-//    }
+
+    @OneToMany(mappedBy = "primaryKey.product", cascade = CascadeType.ALL)
+    public Set<SellerProductEntity> getSellerProduct() {
+        return sellerProduct;
+    }
+
+    public void setSellerProduct(Set<SellerProductEntity> sellerProduct) {
+        this.sellerProduct = sellerProduct;
+    }
 
 }
