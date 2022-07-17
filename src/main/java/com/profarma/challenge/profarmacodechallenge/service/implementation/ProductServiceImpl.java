@@ -25,13 +25,14 @@ public class ProductServiceImpl implements IProductService {
     @Override
     @Transactional
     public void save(ProductDto productDto) {
+        productDto.setProductName(productDto.getProductName().toLowerCase());
         productRepository.save(convertDtoToEntity(productDto));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ProductDto findProductByName(ProductDto productDto) {
-        return convertEntityToDto(productRepository.findByProductName(productDto.getProductName()));
+        return convertEntityToDto(productRepository.findByProductName(productDto.getProductName().toLowerCase()));
     }
 
     @Override
@@ -45,15 +46,14 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProductEntity findById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductDto findById(Long id) {
+        return convertEntityToDto(productRepository.findById(id).orElse(null));
     }
 
     @Override
     @Transactional
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
-
     }
 
 

@@ -2,10 +2,8 @@ package com.profarma.challenge.profarmacodechallenge.controller;
 
 import com.profarma.challenge.profarmacodechallenge.common.ApiResponse;
 import com.profarma.challenge.profarmacodechallenge.dto.ProductDto;
-import com.profarma.challenge.profarmacodechallenge.entity.ProductEntity;
 import com.profarma.challenge.profarmacodechallenge.service.IProductService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -24,8 +22,10 @@ public class ProductRestController {
     private IProductService productService;
 
     @ApiOperation(value = "Creates new product in DB")
-    @PostMapping(path = "/create_product", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductDto productDto) {
+    @PostMapping(path = "/add/{productName}")
+    public ResponseEntity<ApiResponse> createProduct(@PathVariable(value = "productName") String productName) {
+        ProductDto productDto = new ProductDto();
+        productDto.setProductName(productName);
         if (productService.findProductByName(productDto) == null) {
             productService.save(productDto);
             return new ResponseEntity<>(new ApiResponse("Product has been created."), HttpStatus.CREATED);
@@ -34,22 +34,20 @@ public class ProductRestController {
     }
 
     @ApiOperation(value = "Return the list of all products in DB")
-    @GetMapping(path = "/products", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<ProductDto>> getProducts() {
         List<ProductDto> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Deletes a product by id")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "id") Long id) {
-        ProductEntity product = null;
-        product = productService.findById(id);
-        if (product != null) {
+    public ResponseEntity<ApiResponse> deleteProduct(@PathVariable(value = "id") Long id) {
+        if (productService.findById(id) != null) {
             productService.deleteProduct(id);
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse("Product has been deleted."), HttpStatus.OK);
         }
+        return new ResponseEntity<>(new ApiResponse("The product does not exists in the DB"), HttpStatus.CONFLICT);
     }
 
 }

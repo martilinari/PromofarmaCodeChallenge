@@ -9,7 +9,17 @@ spring:
     driverClassName: org.h2.Driver
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    hibernate-orm:
+      sql-load-script: data.sql
     hibernate:
-      ddl-auto: create-drop
+      #      ddl-auto: create-drop
+      ddl-auto: update
       defer-datasource-initialization: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    show-sql: true
+
+
+
 
